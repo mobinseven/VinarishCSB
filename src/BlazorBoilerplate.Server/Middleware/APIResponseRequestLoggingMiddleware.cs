@@ -60,7 +60,7 @@ namespace BlazorBoilerplate.Server.Middleware
                 else
                 {
                     Stopwatch stopWatch = Stopwatch.StartNew();
-                    var requestTime = DateTime.UtcNow;
+                    var requestTime = DateTime.Now;
 
                     var formattedRequest = await FormatRequest(request);
                     var originalBodyStream = httpContext.Response.Body;

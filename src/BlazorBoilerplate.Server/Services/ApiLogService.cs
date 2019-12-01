@@ -63,7 +63,7 @@ namespace BlazorBoilerplate.Server.Services
                 //{
                 //    userSession = new UserSession(currentUser.Result);
                 //}
-            } 
+            }
             else
             {
                 apiLogItem.ApplicationUserId = null;
@@ -78,7 +78,14 @@ namespace BlazorBoilerplate.Server.Services
 
         public async Task<ApiResponse> Get()
         {
-            return new ApiResponse(200, "Retrieved Api Log", _autoMapper.ProjectTo<ApiLogItemDto>(_db.ApiLogs));
+            var logs = _autoMapper.ProjectTo<ApiLogItemDto>(_db.ApiLogs);
+            System.Collections.Generic.List<ApiLogItemDto> logsUserNames = new System.Collections.Generic.List<ApiLogItemDto>();
+            foreach(var log in logs)
+            {
+                log.UserName = _db.Users.Find(log.ApplicationUserId).UserName;
+                logsUserNames.Add(log);
+            }
+            return new ApiResponse(200, "Retrieved Api Log", logsUserNames);
         }
 
         public async Task<ApiResponse> GetByApplictionUserId(Guid applicationUserId)

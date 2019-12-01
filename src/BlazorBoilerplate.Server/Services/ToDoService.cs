@@ -98,7 +98,7 @@ namespace BlazorBoilerplate.Server.Services
             {
                 _db.Todos.Remove(todo);
                 await _db.SaveChangesAsync();
-                return new ApiResponse(200, "Soft Delete Todo");
+                return new ApiResponse(200, "Soft Delete Todo", todo);
             }
             else
             {
