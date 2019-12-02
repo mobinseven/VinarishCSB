@@ -1,25 +1,52 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
-
+<style>
+    .sent {
+        background-color: mediumpurple;
+    }
+</style>
 <EditForm Model="@messageDto" OnValidSubmit="@DeleteMessage">
-    <MatListItem>
-        <MatListItemText Class="@messageDto.CSS" Style="width: 100%;">
+    <MatCard Class="@messageDto.CSS">
+        <MatCardContent>
+            <div>
+                <MatHeadline6>
+                    @messageDto.UserName
+                </MatHeadline6>
+                <MatSubtitle2>
+                    @messageDto.When
+                </MatSubtitle2>
+            </div>
+            <MatBody2>
+                @messageDto.Text
+            </MatBody2>
+        </MatCardContent>
+        @*<MatCardActions>
+            <MatIconButton Icon="delete"
+                           Type="submit"
+                           Style="float: right;">
+            </MatIconButton>
+        </MatCardActions>*@
+    </MatCard>
+    @*<MatListItem>
+
+        <MatListItemText Style="width: 100%;">
             <MatListItemPrimaryText>
                 @messageDto.UserName
             </MatListItemPrimaryText>
+            <MatChip Class="@messageDto.CSS" Label="@messageDto.Text"></MatChip>
             <MatListItemSecondaryText>
-                @messageDto.Text
+                @messageDto.When
             </MatListItemSecondaryText>
         </MatListItemText>
         <MatIconButton Icon="delete"
                        Type="submit"
                        Style="float: right;">
         </MatIconButton>
-    </MatListItem>
+    </MatListItem>*@
     <MatListDivider></MatListDivider>
 </EditForm>
 
 @code
-{    
+{
     MessageDto messageDto { get; set; }
 
     [Parameter]

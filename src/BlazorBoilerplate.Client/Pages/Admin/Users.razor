@@ -8,7 +8,6 @@
 
 <h1>Users</h1>
 <p>User management Screen. Mostly Functional, still under construction</p>
-<MatButton Raised="true" TrailingIcon="add_group" OnClick="@(e => { this.createRoleDialogOpen = true; })" Label="Add Role" />
 
 @if (users == null)
 {
@@ -24,7 +23,9 @@ else
             <th><MatButton Icon="person_add" Label="New User" OnClick="@(e => { createUserDialogOpen = true; })"></MatButton></th>
             <th>User Name</th>
             <th>Email</th>
-            <th>Roles</th>
+            <th>
+                <MatButton Icon="library_add" OnClick="@(e => { this.createRoleDialogOpen = true; })" Label="Add Role" />
+            </th>
         </MatTableHeader>
         <MatTableRow Context="UserRow">
             <td>
