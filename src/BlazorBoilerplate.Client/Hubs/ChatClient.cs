@@ -32,7 +32,7 @@ namespace BlazorBoilerplate.Client.Hubs
         /// This method is called from Javascript when amessage is received
         /// </remarks>
         [JSInvokable]
-        public static void ReceiveMessage(string key, string method, int id, string username, string message,DateTime when)
+        public static void ReceiveMessage(string key, string method, int id, string username, string message)
         {
             if (_clients.ContainsKey(key))
             {
@@ -40,7 +40,7 @@ namespace BlazorBoilerplate.Client.Hubs
                 switch (method)
                 {
                     case "ReceiveMessage":
-                        client.HandleReceiveMessage(id, username, message,when);
+                        client.HandleReceiveMessage(id, username, message);
                         return;
 
                     default:
@@ -126,10 +126,10 @@ namespace BlazorBoilerplate.Client.Hubs
         /// </summary>
         /// <param name="method">event name</param>
         /// <param name="message">message content</param>
-        private void HandleReceiveMessage(int id, string username, string message,DateTime when)
+        private void HandleReceiveMessage(int id, string username, string message)
         {
             // raise an event to subscribers
-            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(id, username, message,when));
+            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(id, username, message));
         }
 
         /// <summary>
@@ -212,12 +212,11 @@ namespace BlazorBoilerplate.Client.Hubs
     /// </summary>
     public class MessageReceivedEventArgs : EventArgs
     {
-        public MessageReceivedEventArgs(int id, string username, string message, DateTime when)
+        public MessageReceivedEventArgs(int id, string username, string message)
         {
             Id = id;
             Username = username;
             Message = message;
-            When = when;
         }
 
         /// <summary>
@@ -233,11 +232,6 @@ namespace BlazorBoilerplate.Client.Hubs
         /// <summary>
         /// Message id
         /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Message time
-        /// </summary>
-        public DateTime When { get; set; }
+        public int Id { get; internal set; }
     }
 }

@@ -57,11 +57,11 @@ namespace BlazorBoilerplate.Server.Hubs
                 Text = message,
                 UserName = user.UserName,
                 UserID = user.Id,
-                When = DateTime.Now
+                When = DateTime.UtcNow
             };
 
             await MessageService.Create(newMessage);
-            await Clients.All.SendAsync("ReceiveMessage", 0, user.UserName, message, newMessage.When);
+            await Clients.All.SendAsync("ReceiveMessage", 0, user.UserName, message);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace BlazorBoilerplate.Server.Hubs
                 // maintain a lookup of connectionId-to-username
                 userLookup.Add(currentId, username);
                 // re-use existing message for now
-                await Clients.AllExcept(currentId).SendAsync("ReceiveMessage", 0, username, $"{username} joined the chat",DateTime.Now);
+                await Clients.AllExcept(currentId).SendAsync("ReceiveMessage", 0, username, $"{username} joined the chat");
             }
         }
 
@@ -93,7 +93,7 @@ namespace BlazorBoilerplate.Server.Hubs
 
             foreach (var message in messages)
             {
-                Clients.Client(Context.ConnectionId).SendAsync("ReceiveMessage", message.Id, message.UserName, message.Text,message.When);
+                Clients.Client(Context.ConnectionId).SendAsync("ReceiveMessage", message.Id, message.UserName, message.Text);
             }
 
             return base.OnConnectedAsync();
@@ -112,7 +112,7 @@ namespace BlazorBoilerplate.Server.Hubs
             if (userLookup.TryGetValue(id, out string username))
             {
                 userLookup.Remove(id);
-                await Clients.AllExcept(Context.ConnectionId).SendAsync("ReceiveMessage", 0, username, $"{username} has left the chat",DateTime.Now);
+                await Clients.AllExcept(Context.ConnectionId).SendAsync("ReceiveMessage", 0, username, $"{username} has left the chat");
             }
             await base.OnDisconnectedAsync(e);
         }

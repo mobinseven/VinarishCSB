@@ -14,13 +14,12 @@ namespace BlazorBoilerplate.Shared.Dto
 
         public MessageDto() { }
 
-        public MessageDto(int id, string userName, string text, bool mine, DateTime when)
+        public MessageDto(int id, string userName, string text, bool mine)
         {
             Id = id;
             UserName = userName;
             Text = text;
             Mine = mine;
-            When = when;
         }
 
         /// <summary>
