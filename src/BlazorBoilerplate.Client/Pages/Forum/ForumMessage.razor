@@ -1,13 +1,17 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
-
+<style>
+    .sent{
+        background-color:thistle;
+    }
+</style>
 <EditForm Model="@messageDto" OnValidSubmit="@DeleteMessage">
-    <MatListItem>
-        <MatListItemText Class="@messageDto.CSS" Style="width: 100%;">
+    <MatListItem Class="@messageDto.CSS">
+        <MatListItemText Style="width: 100%;">
             <MatListItemPrimaryText>
-                @messageDto.UserName
-            </MatListItemPrimaryText>
-            <MatListItemSecondaryText>
                 @messageDto.Text
+                    </MatListItemPrimaryText>
+            <MatListItemSecondaryText>
+                At:@messageDto.When.ToLocalTime() By: @messageDto.UserName
             </MatListItemSecondaryText>
         </MatListItemText>
         <MatIconButton Icon="delete"
@@ -19,7 +23,7 @@
 </EditForm>
 
 @code
-{    
+{
     MessageDto messageDto { get; set; }
 
     [Parameter]

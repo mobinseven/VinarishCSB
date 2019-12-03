@@ -46,7 +46,7 @@ namespace BlazorBoilerplate.Server.Services
 
         public List<MessageDto> GetList()
         {
-            return _autoMapper.ProjectTo<MessageDto>(_db.Messages).OrderBy(i => i.When).Take(10).ToList();
+            return _autoMapper.ProjectTo<MessageDto>(_db.Messages).OrderBy(i => i.When).ToList();
         }
     }
 }

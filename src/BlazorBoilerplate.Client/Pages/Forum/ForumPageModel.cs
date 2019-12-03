@@ -31,7 +31,7 @@ namespace BlazorBoilerplate.Client.Pages
         public string MessagePost { get; set; }
 
         public List<MessageDto> Messages = new List<MessageDto>();
-        
+
         protected override async Task OnInitializedAsync()
         {
             UserInfo = await IdentityAuthenticationStateProvider.GetUserInfo();
@@ -83,8 +83,7 @@ namespace BlazorBoilerplate.Client.Pages
             {
                 isMine = string.Equals(e.Username, UserInfo.UserName, StringComparison.CurrentCultureIgnoreCase);
             }
-
-            var newMessage = new MessageDto(e.Id, e.Username, e.Message, isMine);
+            var newMessage = new MessageDto(e.Id, e.Username, e.Message, e.When, isMine);
             Messages.Insert(0, newMessage);
 
             // Inform blazor the UI needs updating
