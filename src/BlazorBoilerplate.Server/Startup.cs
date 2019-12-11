@@ -97,7 +97,9 @@ namespace BlazorBoilerplate.Server
                   options.EnableTokenCleanup = true;
                   options.TokenCleanupInterval = 3600; //In Seconds 1 hour
               })
-              .AddAspNetIdentity<ApplicationUser>();
+              .AddAspNetIdentity<ApplicationUser>()
+              .AddInMemoryApiResources(RemoteApiIdentityConfig.Apis)
+              .AddInMemoryClients(RemoteApiIdentityConfig.Clients);
 
             X509Certificate2 cert = null;
 
@@ -229,7 +231,7 @@ namespace BlazorBoilerplate.Server
                     {
                         if (context.Request.Path.StartsWithSegments("/api"))
                         {
-                            context.Response.StatusCode = (int) (HttpStatusCode.Unauthorized);
+                            context.Response.StatusCode = (int)(HttpStatusCode.Unauthorized);
                         }
 
                         return Task.CompletedTask;
@@ -249,8 +251,8 @@ namespace BlazorBoilerplate.Server
             {
                 config.PostProcess = document =>
                 {
-                    document.Info.Version     = "v0.2.3";
-                    document.Info.Title       = "Blazor Boilerplate";
+                    document.Info.Version = "v0.2.3";
+                    document.Info.Title = "Blazor Boilerplate";
                     document.Info.Description = "Blazor Boilerplate / Starter Template using the  (ASP.NET Core Hosted) (dotnet new blazorhosted) model. Hosted by an ASP.NET Core server";
                 };
             });
@@ -309,8 +311,8 @@ namespace BlazorBoilerplate.Server
             }
             else
             {
-              // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-              //    app.UseHsts(); //HSTS Middleware (UseHsts) to send HTTP Strict Transport Security Protocol (HSTS) headers to clients.
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                //    app.UseHsts(); //HSTS Middleware (UseHsts) to send HTTP Strict Transport Security Protocol (HSTS) headers to clients.
             }
 
             //app.UseStaticFiles();
