@@ -121,28 +121,26 @@ namespace BlazorBoilerplate.Server
 
                 if (useLocalCertStore)
                 {
-                    using (X509Store store = new X509Store("WebHosting", StoreLocation.LocalMachine))
+                    using X509Store store = new X509Store("WebHosting", StoreLocation.LocalMachine);
+                    store.Open(OpenFlags.ReadOnly);
+                    var certs = store.Certificates.Find(X509FindType.FindByThumbprint, certificateThumbprint, false);
+                    if (certs.Count > 0)
                     {
-                        store.Open(OpenFlags.ReadOnly);
-                        var certs = store.Certificates.Find(X509FindType.FindByThumbprint, certificateThumbprint, false);
-                        if (certs.Count > 0)
-                        {
-                            cert = certs[0];
-                        }
-                        else
-                        {
-                            // import PFX
-                            cert = new X509Certificate2(Path.Combine(_environment.ContentRootPath, "AuthSample.pfx"), "Admin123",
-                                                X509KeyStorageFlags.MachineKeySet |
-                                                X509KeyStorageFlags.PersistKeySet |
-                                                X509KeyStorageFlags.Exportable);
-                            // save certificate and private key
-                            X509Store storeMy = new X509Store(StoreName.CertificateAuthority, StoreLocation.LocalMachine);
-                            storeMy.Open(OpenFlags.ReadWrite);
-                            storeMy.Add(cert);
-                        }
-                        store.Close();
+                        cert = certs[0];
                     }
+                    else
+                    {
+                        // import PFX
+                        cert = new X509Certificate2(Path.Combine(_environment.ContentRootPath, "AuthSample.pfx"), "Admin123",
+                                            X509KeyStorageFlags.MachineKeySet |
+                                            X509KeyStorageFlags.PersistKeySet |
+                                            X509KeyStorageFlags.Exportable);
+                        // save certificate and private key
+                        X509Store storeMy = new X509Store(StoreName.CertificateAuthority, StoreLocation.LocalMachine);
+                        storeMy.Open(OpenFlags.ReadWrite);
+                        storeMy.Add(cert);
+                    }
+                    store.Close();
                 }
                 else
                 {

@@ -20,8 +20,8 @@
     <RepositoryUrl>https://github.com/enkodellc/blazorboilerplate</RepositoryUrl>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
   </PropertyGroup>
-
   <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="4.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.1.0-preview4.19579.2" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.1.0-preview4.19579.2" PrivateAssets="all" />
@@ -37,6 +37,12 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\fonts\fontawesome\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="VinarishModelLibrary">
+      <HintPath>..\..\..\Vinarish\VinarishModelLibrary\bin\Debug\netstandard2.0\VinarishModelLibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
