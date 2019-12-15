@@ -7,6 +7,7 @@ using BlazorBoilerplate.Server.Helpers;
 using BlazorBoilerplate.Server.Middleware;
 using BlazorBoilerplate.Server.Models;
 using BlazorBoilerplate.Server.Services;
+using BlazorBoilerplate.Server.Services.Vinarish;
 using BlazorBoilerplate.Shared.AuthorizationDefinitions;
 using IdentityServer4;
 using IdentityServer4.AccessTokenValidation;
@@ -97,9 +98,7 @@ namespace BlazorBoilerplate.Server
                   options.EnableTokenCleanup = true;
                   options.TokenCleanupInterval = 3600; //In Seconds 1 hour
               })
-              .AddAspNetIdentity<ApplicationUser>()
-              .AddInMemoryApiResources(RemoteApiIdentityConfig.Apis)
-              .AddInMemoryClients(RemoteApiIdentityConfig.Clients);
+              .AddAspNetIdentity<ApplicationUser>();
 
             X509Certificate2 cert = null;
 
@@ -270,6 +269,7 @@ namespace BlazorBoilerplate.Server
             services.AddTransient<IApiLogService, ApiLogService>();
             services.AddTransient<ITodoService, ToDoService>();
             services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<IVinarishService, VinarishService>();
 
             // DB Creation and Seeding
             services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();

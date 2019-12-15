@@ -6,13 +6,17 @@
 <h1>Departments</h1>
 <p>
     Manage Departments.
-    <span>@apiResponses</span>
 </p>
-@if (apiResponses == null)
+@if (Status == 0)
 {
     <LoadingBackground ShowLogoBox="true">
         <label>Loading Api Data</label>
     </LoadingBackground>
+}
+else if (Status != 200)
+{
+    <label>Error in loading Api Data</label>
+
 }
 else
 {
@@ -28,56 +32,24 @@ else
 
 
 @code {
-    string apiResponses;
+    int Status = 0;
 
     List<Department> apiItems = new List<Department>();
 
     protected override async Task OnInitializedAsync()
     {
-        // discover endpoints from metadata
-        var client = new HttpClient();
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>("api/Department");
 
-        var disco = await client.GetDiscoveryDocumentAsync("http://localhost:53414/");
-        if (disco.IsError)
+        if (apiResponse.StatusCode == 200)
         {
-            Console.WriteLine(disco.Error);
-            return;
-        }
-
-        // request token
-        var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-        {
-            Address = disco.TokenEndpoint,
-            ClientId = "VinarishApiClient",
-            ClientSecret = "SecretVinarishApi",
-
-            Scope = "VinarishApi"
-        });
-
-        if (tokenResponse.IsError)
-        {
-            Console.WriteLine(tokenResponse.Error);
-            return;
-        }
-
-        Console.WriteLine(tokenResponse.Json);
-        Console.WriteLine("\n\n");
-
-        // call api
-        var apiClient = new HttpClient();
-        apiClient.SetBearerToken(tokenResponse.AccessToken);
-
-        var response = await apiClient.GetAsync("https://localhost:44377/api/Departments");
-        if (!response.IsSuccessStatusCode)
-        {
-            Console.WriteLine(response.StatusCode);
+            Status = apiResponse.StatusCode;
+            matToaster.Add(apiResponse.Message, MatToastType.Success, "Departments Retrieved");
+            apiItems = Newtonsoft.Json.JsonConvert.DeserializeObject<Department[]>(apiResponse.Result.ToString()).ToList<Department>();
         }
         else
         {
-            var content = await response.Content.ReadAsStringAsync();
-            apiResponses=content;
-            apiItems = Newtonsoft.Json.JsonConvert.DeserializeObject<Department[]>(apiResponses).ToList<Department>();
-
+            Status = apiResponse.StatusCode;
+            matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Departments Retrieval Failed");
         }
     }
 }

@@ -74,4 +74,10 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="VinarishModelLibrary">
+      <HintPath>..\..\..\Vinarish\VinarishModelLibrary\bin\Debug\netstandard2.0\VinarishModelLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
