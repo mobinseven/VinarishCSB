@@ -7,7 +7,6 @@ using BlazorBoilerplate.Server.Helpers;
 using BlazorBoilerplate.Server.Middleware;
 using BlazorBoilerplate.Server.Models;
 using BlazorBoilerplate.Server.Services;
-using BlazorBoilerplate.Server.Services.Vinarish;
 using BlazorBoilerplate.Shared.AuthorizationDefinitions;
 using IdentityServer4;
 using IdentityServer4.AccessTokenValidation;
@@ -18,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +30,7 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using VinarishLib.Models;
 
 namespace BlazorBoilerplate.Server
 {
@@ -76,7 +77,9 @@ namespace BlazorBoilerplate.Server
             }
 
             services.AddDbContext<ApplicationDbContext>(DbContextOptionsBuilder);
-
+            services.AddDbContext<VinarishDbContext>(opt =>
+               opt.UseSqlServer(
+                    "Data Source=185.10.75.8;User ID=vinarish;Password=Hibernate70!;TrustServerCertificate=True;ApplicationIntent=ReadWrite;"));
             services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
                 .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -248,8 +251,9 @@ namespace BlazorBoilerplate.Server
                     }
                 };
             });
-
-            services.AddControllers().AddNewtonsoftJson();
+            var assembly = typeof(Department).Assembly;
+            services.AddControllers().AddControllersAsServices().AddNewtonsoftJson()
+                .PartManager.ApplicationParts.Add(new AssemblyPart(assembly));
             services.AddSignalR();
 
             services.AddSwaggerDocument(config =>
@@ -277,7 +281,6 @@ namespace BlazorBoilerplate.Server
             services.AddTransient<IApiLogService, ApiLogService>();
             services.AddTransient<ITodoService, ToDoService>();
             services.AddTransient<IMessageService, MessageService>();
-            services.AddTransient<IVinarishService, VinarishService>();
 
             // DB Creation and Seeding
             services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();

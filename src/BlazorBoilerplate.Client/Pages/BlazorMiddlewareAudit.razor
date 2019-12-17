@@ -1,5 +1,5 @@
 ﻿@page "/blazor_middlware_audit"
-
+@attribute [Authorize]
 @inject HttpClient Http
 @inject IMatToaster matToaster
 
@@ -36,6 +36,7 @@ else
                     {
                     <span> @context.ResponseBody</span>
                     }
+                /**/
             </td>
         </MatTableRow>
     </MatTable>

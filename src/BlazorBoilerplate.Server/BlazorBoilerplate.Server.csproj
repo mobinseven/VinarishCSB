@@ -64,8 +64,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="VinarishModelLibrary">
-      <HintPath>..\..\..\Vinarish\VinarishModelLibrary\bin\Debug\netstandard2.0\VinarishModelLibrary.dll</HintPath>
+    <Reference Include="VinarishLib">
+      <HintPath>..\..\..\Vinarish\VinarishLib\bin\Debug\netstandard2.0\VinarishLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 

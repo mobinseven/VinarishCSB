@@ -37,6 +37,7 @@ namespace BlazorBoilerplate.Client
                 config.MaximumOpacity = 95;
                 config.VisibleStateDuration = 3000;
             });
+
         }
 
         public void Configure(IComponentsApplicationBuilder app)
@@ -44,6 +45,7 @@ namespace BlazorBoilerplate.Client
             //WebAssemblyHttpMessageHandler.DefaultCredentials = FetchCredentialsOption.Include; //Not sure if we need this https://github.com/aspnet/AspNetCore/issues/17115 Preview4
             app.UseLoadingBar();
             app.AddComponent<App>("app");
+            app.UseLocalTimeZone();
         }
     }
 }

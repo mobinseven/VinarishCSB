@@ -1,7 +1,9 @@
 ﻿@page "/Departments"
-
+@attribute [Authorize]
 @inject HttpClient Http
 @inject IMatToaster matToaster
+@implements IDisposable
+@inject IJSRuntime JSRuntime
 
 <h1>Departments</h1>
 <p>
@@ -22,23 +24,74 @@ else
 {
     <MatTable Items="@apiItems" Class="mat-elevation-z5" Striped="true" PageSize="10">
         <MatTableHeader>
+            <th>
+                <div>
+                    <MatButton Icon="library_add" OnClick="@((e) => OpenDialog())" Raised="true"></MatButton>
+                </div>
+            </th>
             <th>Name</th>
         </MatTableHeader>
         <MatTableRow>
+            <td>
+                <MatIconButton Icon="delete" OnClick="@(() => OpenDeleteDialog(context.DepartmentId))"></MatIconButton>
+            </td>
             <td>@context.Name</td>
         </MatTableRow>
     </MatTable>
 }
 
 
-@code {
-    int Status = 0;
+<MatDialog @bind-IsOpen="@dialogIsOpen">
+    <MatDialogTitle>Create Department</MatDialogTitle>
+    <MatDialogContent>
+        <EditForm Model="@dep" OnValidSubmit="@CreateDepartment">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <fieldset>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@dep.Name" Label="Name" FullWidth="true" Required="true"></MatTextField>
+                </div>
+            </fieldset>
+        </EditForm>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+        <MatButton OnClick="@CreateDepartment">Create Department</MatButton>
+    </MatDialogActions>
+</MatDialog>
 
+<MatDialog @bind-IsOpen="@deleteDialogOpen" Style="z-index:100">
+    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Confirm Delete</MatDialogTitle>
+    <MatDialogContent>
+        Are you sure you want to delete "@dep.Name" ?
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { deleteDialogOpen = false; })">Cancel</MatButton>
+        <MatButton OnClick="@Delete">Delete</MatButton>
+    </MatDialogActions>
+</MatDialog>
+@code {
+    bool deleteDialogOpen = false;
+    bool dialogIsOpen = false;
+    int Status = 0;
+    Department dep { get; set; } = new Department();
     List<Department> apiItems = new List<Department>();
+
+    public void OpenDialog()
+    {
+        dialogIsOpen = true;
+        dep = new Department();
+    }
+    public void OpenDeleteDialog(Guid departmentId)
+    {
+        dep = apiItems.Where(x => x.DepartmentId == departmentId).FirstOrDefault();
+        this.deleteDialogOpen = true;
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>("api/Department");
+
+        ApiResponseDto apiResponse = await Http.GetJsonAsync<ApiResponseDto>("api/Departments");
 
         if (apiResponse.StatusCode == 200)
         {
@@ -51,5 +104,60 @@ else
             Status = apiResponse.StatusCode;
             matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Departments Retrieval Failed");
         }
+    }
+    public async Task CreateDepartment()
+    {
+        dialogIsOpen = false;
+        try
+        {
+            ApiResponseDto apiResponse = await Http.PostJsonAsync<ApiResponseDto>("api/Departments", dep);
+            if (apiResponse.StatusCode == 200)
+            {
+                matToaster.Add(apiResponse.Message, MatToastType.Success, "Department Creation Successfull");
+                dep = Newtonsoft.Json.JsonConvert.DeserializeObject<Department>(apiResponse.Result.ToString());
+                apiItems.Add(dep);
+                dep = new Department(); //reset after insert
+            }
+            else
+            {
+                matToaster.Add(apiResponse.Message + " : " + apiResponse.StatusCode, MatToastType.Danger, "Department Creation Failed");
+            }
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "Department Creation Failed");
+        }
+    }
+
+    public async Task Delete()
+    {
+        try
+        {
+            var response = await Http.DeleteAsync("api/Departments/" + dep.DepartmentId);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                matToaster.Add("Department Deleted", MatToastType.Success);
+                apiItems.Remove(dep);
+            }
+            else
+            {
+                matToaster.Add("Department Delete Failed: " + response.StatusCode, MatToastType.Danger);
+            }
+            deleteDialogOpen = false;
+            dep = new Department(); //reset after delete
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.Message, MatToastType.Danger, "Department Save Failed");
+        }
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        JSRuntime.InvokeVoidAsync("LoadScrollPosition");
+        JSRuntime.InvokeVoidAsync("SaveCurrentPagePath");
+    }
+    public void Dispose()
+    {
+        JSRuntime.InvokeVoidAsync("SaveScrollPosition");
     }
 }
