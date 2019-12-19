@@ -48,12 +48,12 @@
                             </div>
                         </MatAppBarSection>
     <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-        <MatTooltip Tooltip="Donate to Support">
+        @*<MatTooltip Tooltip="Donate to Support">
             <MatIconButton Link="https://www.paypal.me/enkodellc" RefBack="@context"><i class="fa fa-cc-paypal"></i></MatIconButton>
         </MatTooltip>
         <MatTooltip Tooltip="Github Repository">
             <MatIconButton Link="https://github.com/enkodellc/blazorboilerplate" RefBack="@context"><i class="fa fa-github" aria-hidden="true"></i></MatIconButton>
-        </MatTooltip>
+        </MatTooltip>*@
         <Login></Login>
     </MatAppBarSection>
                     </MatAppBarRow>
@@ -63,11 +63,11 @@
         <section class="container-fluid">
             @Body
         </section>
-        <footer class="page-footer">
+        @*<footer class="page-footer">
             <div class="flex-1">
                 © 2019 <a href="//blazorboilerplate.com">Blazor Boilerplate</a> Version 0.5.0 - Developed by <a href="https://keithfimreite.com" target="_blank">Enkode LLC</a>
             </div>
-        </footer>
+        </footer>*@
     </MatAppBarContent>
             </MatAppBarContainer>
         </MatDrawerContent>
@@ -83,7 +83,7 @@
 
         protected override async Task OnInitializedAsync()
         {
-            // Uncomment to secure entire app
+            // Uncomment to secure entire app: I got a login loop by uncommenting
             //navigationManager.NavigateTo("/account/login");
 
             // Set Default landing page if you want
@@ -94,8 +94,8 @@
             if (user.Identity.IsAuthenticated)
             {
                 var profile = await appState.GetUserProfile();
-                _navMenuOpened = profile.IsNavOpen;
-                _navMinified = profile.IsNavMinified;
+                //_navMenuOpened = profile.IsNavOpen;
+                //_navMinified = profile.IsNavMinified;
                 // navigationManager.NavigateTo(AppState.UserProfile.LastPageVisited); //Not Implemented
             }
         }

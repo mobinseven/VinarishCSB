@@ -29,11 +29,11 @@
                 <MatCheckbox @bind-Value="@loginParameters.RememberMe" class="filled-in chk-col-blue">Remember Me</MatCheckbox>
                 <MatButton class="float-right" OnClick="@SubmitLogin" Raised="true">Login</MatButton>
             </div>
-            <hr />
-            <div>
-                <MatButton class="float-left" OnClick="@Register" Raised="true">Create account</MatButton>
-                <MatButton class="float-right" OnClick="@GoogleSignIn" Raised="true">Sign in with <img height="18" style="margin-left: 5px" src="https://www.google.pl/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" /></MatButton><br />
-            </div>
+            @*<hr />
+        <div>
+            <a href="/account/register"><MatButton class="float-left" Raised="true">Create account</MatButton></a>
+            <MatButton class="float-right" OnClick="@GoogleSignIn" Raised="true">Sign in with <img height="18" style="margin-left: 5px" src="https://www.google.pl/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" /></MatButton><br />
+        </div>*@
         </fieldset>
     </EditForm>
 </MatCard>
@@ -59,42 +59,48 @@
     LoginDto loginParameters { get; set; } = new LoginDto();
     ForgotPasswordDto forgotPasswordParameters { get; set; } = new ForgotPasswordDto();
 
-    async Task GoogleSignIn()
-    {
-        navigationManager.NavigateTo(navigationManager.BaseUri + "api/externalauth/challenge/google", true);
-    }
+    //async Task GoogleSignIn()
+    //{
+    //    navigationManager.NavigateTo(navigationManager.BaseUri + "api/externalauth/challenge/google", true);
+    //}
 
-    async Task Register()
-    {
-        navigationManager.NavigateTo("/account/register");
-    }
+    //async Task Register()
+    //{
+    //    navigationManager.NavigateTo("/account/register");
+    //}
 
     async Task SubmitLogin()
     {
-        try
+        var response = await authStateProvider.Login(loginParameters);
+        if (response.StatusCode == 200)
         {
-            var response = await authStateProvider.Login(loginParameters);
-            if (response.StatusCode == 200)
-            {
-                // On successful Login the response.Message is the Last Page Visited
-                if (!string.IsNullOrEmpty(response.Message))
-                {
-                    navigationManager.NavigateTo(navigationManager.BaseUri + response.Message);
-                }
-                else
-                {
-                    navigationManager.NavigateTo("/dashboard");
-                }
-            }
-            else
-            {
-                matToaster.Add(response.Message, MatToastType.Danger, "Login Attempt Failed");
-            }
+
+            navigationManager.NavigateTo("/dashboard");
         }
-        catch (Exception ex)
-        {
-            matToaster.Add(ex.Message, MatToastType.Danger, "Login Attempt Failed");
-        }
+        //try
+        //{
+        //    var response = await authStateProvider.Login(loginParameters);
+        //    if (response.StatusCode == 200)
+        //    {
+        //        // On successful Login the response.Message is the Last Page Visited
+        //        if (!string.IsNullOrEmpty(response.Message))
+        //        {
+        //            navigationManager.NavigateTo(navigationManager.BaseUri + response.Message);
+        //        }
+        //        else
+        //        {
+        //            navigationManager.NavigateTo("/dashboard");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        matToaster.Add(response.Message, MatToastType.Danger, "Login Attempt Failed");
+        //    }
+        //}
+        //catch (Exception ex)
+        //{
+        //    matToaster.Add(ex.Message, MatToastType.Danger, "Login Attempt Failed");
+        //}
     }
 
     async Task ForgotPassword()

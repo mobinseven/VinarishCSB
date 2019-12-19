@@ -3,11 +3,11 @@
 @inherits ForumPageModel
 @inject HttpClient Http
 <style>
-    .MessageCreateForm {
+    /*.MessageCreateForm {
         position: fixed;
         bottom: 2rem;
         z-index: 99;
-    }
+    }*/
 
     #scroller * {
         /* don't allow the children of the scrollable element to be selected as an anchor node */
@@ -34,39 +34,44 @@
 
 <AuthorizeView Context="AuthorizeContext">
     <Authorized>
-        <div class="MessageCreateForm"> <ForumMessageCreateForm Send="Send" /></div>
-
-        <MatList SingleSelection="true" TwoLine="true">
-            @if (Messages == null)
-            {
-                <MatListItem>
-                    <MatListItemText>
-                        Loading messages...
-                    </MatListItemText>
-                </MatListItem>
-            }
-            else if (Messages.Count == 0)
-            {
-                <MatListItem>
-                    <MatListItemText>
-                        No Messages.
-                    </MatListItemText>
-                </MatListItem>
-            }
-            else
-            {
+        <div id="scroller">
+            <MatList SingleSelection="true" TwoLine="true">
+                @if (Messages == null)
                 {
-                    Messages.Sort((x, y) => x.When.CompareTo(y.When));
+                    <MatListItem>
+                        <MatListItemText>
+                            Loading messages...
+                        </MatListItemText>
+                    </MatListItem>
                 }
-                <div id="scroller">
+                else if (Messages.Count == 0)
+                {
+                    <MatListItem>
+                        <MatListItemText>
+                            No Messages.
+                        </MatListItemText>
+                    </MatListItem>
+                }
+                else
+                {
+                    {
+                        Messages.Sort((x, y) => x.When.CompareTo(y.When));
+                    }
                     @foreach (var message in Messages)
                     {
                         <ForumMessage Delete="Delete" Message="@message" />
                     }
-                    <div id="anchor"></div>
-
-                </div>
-            }
-        </MatList>
+                }
+            </MatList>
+            <div class="MessageCreateForm"> <ForumMessageCreateForm Send="Send" /></div>
+            <div id="anchor"></div>
+        </div>
     </Authorized>
 </AuthorizeView>
+@inject IJSRuntime JSRuntime
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        JSRuntime.InvokeVoidAsync("ScrollToBottom");
+    }
+}

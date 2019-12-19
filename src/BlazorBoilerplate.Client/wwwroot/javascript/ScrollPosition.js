@@ -13,5 +13,8 @@ window.LoadScrollPosition = function () {
     var scroll = parseInt(localStorage.getItem("scrollPosition_" + pathName));
     if (!isNaN(scroll))
         document.getElementsByClassName("mat-drawer-app-content")[0].scrollTop = scroll;
-
+}
+window.ScrollToBottom = function () {
+    var elem = document.getElementsByClassName("mat-drawer-app-content")[0];
+    elem.scrollTop = elem.scrollHeight;
 }
