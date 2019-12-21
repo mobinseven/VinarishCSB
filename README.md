@@ -11,10 +11,10 @@ Version 0.2.3 and below utilize AspNETCore Authorization / Authentication. Versi
 [![Gitter](https://badges.gitter.im/BlazorBoilerplate/community.svg)](https://gitter.im/blazorboilerplate/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Goals
-- To create a boilerplate with Blazor / Razor components that includes the most common functionality for an app that is lean yet powerful for anyone to start their own project rapidly. 
-- Avoid many library's which make it difficult to track down code and issues.
-- This repository is community driven. It is not and never will be controlled by a corporation. 
-- Minimal Javascript. Currently only using them for SignalR for the Forum and MatBlazor / Material Desing. We may us components with JS in them but so far no Javascript has been written specifically for anything in the repository.
+- To create a boilerplate with Blazor / Razor components that includes the most common functionality for an app that is lean yet powerful for anyone to start a real world application quickly.
+- Avoid many external compnents & libraries which make it difficult to maintain, update, track down code, learn code and issues.
+- This repository is community driven. It is not and never will be controlled by a corporation.
+- Minimal Javascript. Currently only using them for SignalR for the Forum and MatBlazor / Material Desing. We may use components with JS in them but so far no Javascript has been written specifically for anything in the repository.
 
 # Live demo
 [Blazor Boilerplate](https://blazorboilerplate.com) - Kick the tires.  *Note Firewall does block some foreign IP addresses. Swagger UI to view the server API [https://blazorboilerplate.com/swagger/index.html](https://blazorboilerplate.com/swagger/index.html).
@@ -39,8 +39,9 @@ Complete all Blazor dependencies.
 1. Publish both the Client and Server projects to local folder
 2. Upload / Copy published Server directory to website folder.
 3. Upload / Copy published Client directory ON TOP of to the same root website directory of Server, it will add some files and overwrite some.
-4. Configure your appsettings.production.config - ConnectionString, Thumbprint / SSL.
-5. Login with either the user **[user | user123]** or admin **[admin | admin123]** default accounts.
+4. Install your SSL, use self-signed if you don't have one. Make sure your SSL is in the WebHosting Certificate Store.
+5. Configure your appsettings.production.config - Connection String, Thumbprint / SSL. 
+6. Login with either the user **[user | user123]** or admin **[admin | admin123]** default accounts.
 
 ### Thanks To
 - [Blazor](https://blazor.net)
@@ -116,7 +117,8 @@ This project is licensed under the terms of the [MIT license](LICENSE).
 ### 0.5.0 (Under Development)
 - MatBlazor 2.0 Breaking Changes
 - .NET Core 3.1.0 / v3.1.0-preview4 Blazor Nuget package updates
-- Admin Roles / Permissions Management Thanks [vd3d](https://github.com/vd3d)
+- Admin Roles / Permissions Management. Thanks [vd3d](https://github.com/vd3d)
+- Fix Login EditForm / Double submit of Login. Thanks [MarkStega](https://github.com/MarkStega)
     
 ### 0.4.0
  - Docker Support. Thanks [npraskins](https://github.com/npraskins) & [acid12](https://github.com/acid12)
