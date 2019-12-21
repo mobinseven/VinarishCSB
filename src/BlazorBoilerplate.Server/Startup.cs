@@ -64,7 +64,7 @@ namespace BlazorBoilerplate.Server
             {
                 if (useSqlServer)
                 {
-                    builder.UseSqlServer(dbConnString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    builder.UseSqlServer(dbConnString, sql => sql.MigrationsAssembly(migrationsAssembly)) ;
                 }
                 else if (Convert.ToBoolean(Configuration["BlazorBoilerplate:UsePostgresServer"] ?? "false"))
                 {
@@ -284,6 +284,7 @@ namespace BlazorBoilerplate.Server
 
             // DB Creation and Seeding
             services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();
+            services.AddTransient<VinarishLib.Data.IDatabaseInitializer, VinarishLib.Data.DatabaseInitializer>();
 
             //Automapper to map DTO to Models https://www.c-sharpcorner.com/UploadFile/1492b1/crud-operations-using-automapper-in-mvc-application/
             var automapperConfig = new MapperConfiguration(configuration =>
@@ -305,6 +306,8 @@ namespace BlazorBoilerplate.Server
             {
                 var databaseInitializer = serviceScope.ServiceProvider.GetService<IDatabaseInitializer>();
                 databaseInitializer.SeedAsync().Wait();
+                var VinarishDatabaseInitializer = serviceScope.ServiceProvider.GetService<VinarishLib.Data.IDatabaseInitializer>();
+                VinarishDatabaseInitializer.SeedAsync().Wait();
             }
 
             app.UseResponseCompression(); // This must be before the other Middleware if that manipulates Response
@@ -337,8 +340,8 @@ namespace BlazorBoilerplate.Server
             app.UseMiddleware<UserSessionMiddleware>();
 
             // NSwag
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
+            //app.UseOpenApi();
+            //app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {

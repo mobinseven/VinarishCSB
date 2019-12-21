@@ -11,7 +11,7 @@ namespace BlazorBoilerplate.Client.States
 {
     public class IdentityAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private UserInfoDto _userInfoCache = null;
+        private UserInfoDto _userInfoCache = new UserInfoDto();
         private readonly IAuthorizeApi _authorizeApi;
         private readonly AppState _appState;
 
@@ -24,6 +24,10 @@ namespace BlazorBoilerplate.Client.States
         public async Task<ApiResponseDto> Login(LoginDto loginParameters)
         {
             ApiResponseDto apiResponse = await _authorizeApi.Login(loginParameters);
+            if (apiResponse.StatusCode == 200)
+            {
+                _userInfoCache = await _authorizeApi.GetUserInfo();
+            }
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
             return apiResponse;
         }
@@ -78,7 +82,7 @@ namespace BlazorBoilerplate.Client.States
             }
 
             //If the user is not authenticated then an empt UserInfoDto is returned
-            _userInfoCache = await _authorizeApi.GetUserInfo();
+            //_userInfoCache = await _authorizeApi.GetUserInfo();
             return _userInfoCache;
         }
 
