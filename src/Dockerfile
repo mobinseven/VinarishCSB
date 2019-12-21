@@ -6,7 +6,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["/BlazorBoilerplate.Server/BlazorBoilerplate.Server.csproj", "BlazorBoilerplate.Server/"]
 COPY ["/BlazorBoilerplate.Shared/BlazorBoilerplate.Shared.csproj", "BlazorBoilerplate.Shared/"]
-COPY ["/BlazorBoilerplate.Client/BlazorBoilerplate.Client.csproj", "BlazorBoilerplate.Client/"]
+COPY ["/VinarishCsb.Client/VinarishCsb.Client.csproj", "VinarishCsb.Client/"]
 RUN dotnet restore "BlazorBoilerplate.Server/BlazorBoilerplate.Server.csproj"
 COPY . .
 WORKDIR "/src/BlazorBoilerplate.Server"
