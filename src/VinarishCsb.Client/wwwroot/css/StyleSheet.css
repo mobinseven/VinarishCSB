@@ -1,0 +1,13 @@
+﻿html, body {
+    font-family: BNazanin,MyriadPro !important;
+    direction: rtl;
+    font-size: larger;
+    text-align: justify;
+}
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}

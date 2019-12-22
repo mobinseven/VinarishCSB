@@ -1,5 +1,6 @@
 html, body {
-    font-family: HelveticaNeue, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-family: BNazanin,MyriadPro !important;
+    direction: rtl;
 }
 
 app {
@@ -139,7 +140,6 @@ app {
         background-color: #f4f4f4 !important;
     }
 
-
 /* app bar */
 .mdc-top-app-bar__row {
     background-color: #fff;
@@ -166,7 +166,6 @@ app {
 .mdc-top-app-bar__title a {
     color: white;
 }
-
 
 .sub-menu {
     visibility: hidden; /* hides sub-menu */
@@ -215,7 +214,6 @@ app {
 .sub-menu {
     background: #DDD;
 }
-
 
 /* page */
 .container-fluid {
@@ -353,8 +351,6 @@ app {
 .mat-accordion .mdc-nav-menu .mat-expansion-panel.mat-expansion-panel--expanded {
     margin: 0;
 }
-
-
 
 .drawer-logo {
     display: flex;
@@ -499,7 +495,6 @@ ul.breadcrumb {
 /* dialog */
 .mdc-dialog__content {
     min-width: 300px;
-
 }
 
 .mdc-dialog__title + .mdc-dialog__content {
@@ -514,6 +509,7 @@ ul.breadcrumb {
 .mdc-dialog__actions {
     border-top: 1px solid #e1e1e1 !important;
 }
+
 .no-drop {
     border: 2px dashed red;
 }
@@ -592,7 +588,6 @@ ul.breadcrumb {
 
 /* Small devices (landscape phones, less than 768px)*/
 @media (max-width: 767.98px) {
-
     .mdc-drawer, .app-sidebar {
         width: 54px !important;
         transform: translateX(0%);
@@ -697,8 +692,6 @@ ul.breadcrumb {
 /* Large devices (desktops, less than 1200px) */
 @media (max-width: 1199.98px) {
 }
-
-
 
 /* MatBlazor temp */
 .mat-toast-body {

@@ -9,7 +9,7 @@
 <p>
     Manage Departments.
 </p>
-@if (Status == 0)
+@if (apiItems == null)
 {
     <LoadingBackground ShowLogoBox="true">
         <label>Loading Api Data</label>
@@ -39,7 +39,6 @@ else
         </MatTableRow>
     </MatTable>
 }
-
 
 <MatDialog @bind-IsOpen="@dialogIsOpen">
     <MatDialogTitle>Create Department</MatDialogTitle>
@@ -75,7 +74,7 @@ else
     bool dialogIsOpen = false;
     int Status = 0;
     Department dep { get; set; } = new Department();
-    List<Department> apiItems = new List<Department>();
+    List<Department> apiItems;
 
     public void OpenDialog()
     {

@@ -64,7 +64,7 @@ namespace VinarishCsb.Server
             {
                 if (useSqlServer)
                 {
-                    builder.UseSqlServer(dbConnString, sql => sql.MigrationsAssembly(migrationsAssembly)) ;
+                    builder.UseSqlServer(dbConnString, sql => sql.MigrationsAssembly(migrationsAssembly).EnableRetryOnFailure());
                 }
                 else if (Convert.ToBoolean(Configuration["VinarishCsb:UsePostgresServer"] ?? "false"))
                 {
@@ -318,8 +318,8 @@ namespace VinarishCsb.Server
 
             //if (env.IsDevelopment())
             //{
-                app.UseDeveloperExceptionPage();
-                app.UseBlazorDebugging();
+            app.UseDeveloperExceptionPage();
+            app.UseBlazorDebugging();
             //}
             //else
             //{

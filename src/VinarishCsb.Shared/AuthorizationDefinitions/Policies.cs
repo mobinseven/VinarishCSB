@@ -40,7 +40,7 @@ namespace VinarishCsb.Shared.AuthorizationDefinitions
         {
             return new AuthorizationPolicyBuilder()
             .RequireAuthenticatedUser()
-            //.AddRequirements(new DomainRequirement("VinarishCsb.com"))
+            .AddRequirements(new DomainRequirement("Vinarish.com"))
             .Build();
         }
     }

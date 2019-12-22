@@ -3,10 +3,7 @@
 
 <AuthorizeView Context="AuthorizeContext">
     <Authorized>
-        <div class="drawer-profile">
-            <MatIconButton Icon="account_circle" Link="/account/profile"></MatIconButton>
-            <span class="miniHover"><b><a href="/account/profile">@userInfo.UserName</a></b></span>
-        </div>
+        <MatButton Icon="account_circle" Link="/account/profile" Label="@userInfo.UserName" Raised="true"></MatButton>
     </Authorized>
 </AuthorizeView>
 

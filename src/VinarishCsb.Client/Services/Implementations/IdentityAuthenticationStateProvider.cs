@@ -6,12 +6,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace VinarishCsb.Client.States
 {
     public class IdentityAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private UserInfoDto _userInfoCache = null;
         private readonly IAuthorizeApi _authorizeApi;
         private readonly AppState _appState;
 
@@ -45,7 +45,6 @@ namespace VinarishCsb.Client.States
         {
             _appState.UserProfile = null;
             ApiResponseDto apiResponse = await _authorizeApi.Logout();
-            _userInfoCache = null;
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
             return apiResponse;
         }
@@ -72,14 +71,17 @@ namespace VinarishCsb.Client.States
 
         public async Task<UserInfoDto> GetUserInfo()
         {
-            if (_userInfoCache != null && _userInfoCache.IsAuthenticated)
+            UserInfoDto userInfo = await _authorizeApi.GetUser();
+            bool IsAuthenticated = userInfo.IsAuthenticated;
+            if (IsAuthenticated)
             {
-                return await _authorizeApi.GetUserInfo();
+                userInfo = await _authorizeApi.GetUserInfo();
             }
-
-            //If the user is not authenticated then an empt UserInfoDto is returned
-            //_userInfoCache = await _authorizeApi.GetUserInfo();
-            return new UserInfoDto();
+            else
+            {
+                userInfo = new UserInfoDto { IsAuthenticated = false, Roles = new List<string>() };
+            }
+            return userInfo;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -90,7 +92,7 @@ namespace VinarishCsb.Client.States
                 var userInfo = await GetUserInfo();
                 if (userInfo.IsAuthenticated)
                 {
-                    var claims = new[] { new Claim(ClaimTypes.Name, _userInfoCache.UserName) }.Concat(_userInfoCache.ExposedClaims.Select(c => new Claim(c.Key, c.Value)));
+                    var claims = new[] { new Claim(ClaimTypes.Name, userInfo.UserName) }.Concat(userInfo.ExposedClaims.Select(c => new Claim(c.Key, c.Value)));
                     identity = new ClaimsIdentity(claims, "Server authentication");
                 }
             }
