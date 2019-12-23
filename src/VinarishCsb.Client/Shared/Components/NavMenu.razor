@@ -7,17 +7,17 @@
 @if (IsLoggedIn)
 {
 
-    <div class="bg-light text-right" id="sidebar-wrapper" dir="rtl">
+    <div class="bg-light text-right" id="sidebar-wrapper" dir="rtl" style="margin:0 2rem 8rem 2rem;">
         <div class="list-group list-group-flush">
-            <a href="@navigationManager.ToAbsoluteUri(" ").AbsoluteUri" class="list-group-item list-group-item-action bg-light btn-outline-dark"><i class="fa fa-home fa-fw"></i>پیشگفتار</a>
-            <a href="@navigationManager.ToAbsoluteUri("todo_list").AbsoluteUri" class="list-group-item list-group-item-action bg-light btn-outline-dark"><i class="fa fa-list-alt fa-fw"></i>&nbsp;فهرست کارها</a>
-            <a href="@navigationManager.ToAbsoluteUri("blazor_middlware_audit").AbsoluteUri" class="list-group-item list-group-item-action bg-light btn-outline-dark"><i class="fa fa-eye fa-fw"></i>&nbsp;گزارش سامانه</a>
-            <a href="@navigationManager.ToAbsoluteUri("dashboard").AbsoluteUri" class="list-group-item list-group-item-action bg-light btn-outline-dark"><i class="fa fa-tachometer fa-fw"></i>پیشخوان</a>
-            <a href="@navigationManager.ToAbsoluteUri("admin/users").AbsoluteUri" class="list-group-item list-group-item-action bg-light btn-outline-dark"><i class="fa fa-users fa-fw"></i>کاربران</a>
-            <a href="@navigationManager.ToAbsoluteUri("admin/roles").AbsoluteUri" class="list-group-item list-group-item-action bg-light btn-outline-dark"><i class="fa fa-key fa-fw"></i>دسترسی‌ها</a>
-            <a href="@navigationManager.ToAbsoluteUri("forum").AbsoluteUri" class="list-group-item list-group-item-action bg-light btn-outline-dark"><i class="fa fa-comments fa-fw"></i>پیام‌رسان</a>
-            <a href="@navigationManager.ToAbsoluteUri("/account/profile ").AbsoluteUri" class="list-group-item list-group-item-action bg-light btn-outline-dark"><i class="fa fa-user-circle fa-fw"></i>کاربر: @userInfo.UserName</a>
-            <a @onclick="@(e=>LogoutClick())" href="@navigationManager.ToAbsoluteUri(" ").AbsoluteUri" class="list-group-item list-group-item-action bg-light btn-outline-dark"><i class="fa fa-sign-out fa-fw"></i>پایان کار با برنامه</a>
+            <button @onclick="@(e=>navigationManager.NavigateTo(" "))" class="list-group-item btn-outline-dark d-flex justify-content-between"><div><i class="fa fa-home fa-fw"></i>پیشگفتار</div></button>
+            @*<button @onclick="@(e=>navigationManager.NavigateTo("todo_list"))" class="list-group-item btn-outline-dark d-flex justify-content-between"><div><i class="fa fa-list-alt fa-fw"></i>&nbsp;فهرست کارها</div></button>*@
+            @*<button @onclick="@(e=>navigationManager.NavigateTo("blazor_middlware_audit"))" class="list-group-item btn-outline-dark d-flex justify-content-between"><div><i class="fa fa-eye fa-fw"></i>&nbsp;گزارش سامانه</div></button>*@
+            @*<button @onclick="@(e=>navigationManager.NavigateTo("dashboard"))" class="list-group-item btn-outline-dark d-flex justify-content-between"><div><i class="fa fa-tachometer fa-fw"></i>پیشخوان</div></button>*@
+            @*<button @onclick="@(e=>navigationManager.NavigateTo("admin/users"))" class="list-group-item btn-outline-dark d-flex justify-content-between"><div><i class="fa fa-users fa-fw"></i>کاربران</div></button>*@
+            @*<button @onclick="@(e=>navigationManager.NavigateTo("admin/roles"))" class="list-group-item btn-outline-dark d-flex justify-content-between"><div><i class="fa fa-key fa-fw"></i>دسترسی‌ها</div></button>*@
+            <button @onclick="@(e=>navigationManager.NavigateTo("forum"))" class="list-group-item btn-outline-dark d-flex justify-content-between"><div><i class="fa fa-comments fa-fw"></i>پیام‌رسان</div></button>
+            <button @onclick="@(e=>navigationManager.NavigateTo(" "))" class="list-group-item btn-outline-dark d-flex justify-content-between"><div><i class="fa fa-user-circle fa-fw"></i>کاربر: @userInfo.UserName</div></button>
+            <button @onclick="@(e=>LogoutClick())" href="@navigationManager.ToAbsoluteUri(" ").AbsoluteUri" class="list-group-item btn btn-outline-dark d-flex justify-content-between"><div><i class="fa fa-sign-out fa-fw"></i>پایان کار با برنامه</div></button>
         </div>
     </div>
 }

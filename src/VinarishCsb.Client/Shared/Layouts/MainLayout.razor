@@ -1,6 +1,13 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager navigationManager
 @inject AppState appState
+<style>
+    .btn_icon {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+</style>
 <MatDrawerContainer Style="width: 100vw; height: 100vh;">
     <MatDrawer @bind-Opened="@Opened" Mode="@MatDrawerMode.Modal"
                Style="width: 100vw; height: 100vh;">
@@ -13,8 +20,6 @@
             </header>
             <NavMenu />
         </div>
-        <br />
-        <br />
     </MatDrawer>
     <MatDrawerContent>
         <section class="container-fluid">
@@ -24,13 +29,13 @@
         <br />
         <footer class="fixed-bottom">
             <nav class="navbar" style="background-color: rgba(255, 255, 255, 0.5);">
-                <div class="container align-content-center">
-                    <a @onclick="@(e=>ButtonClicked())">
-                        <span class="fa-stack fa-lg">
+                <div>
+                    <button class="btn_icon" @onclick="@(e=>ButtonClicked())">
+                        <span class="fa-stack">
                             <i class="fa fa-circle fa-stack-2x"></i>
                             <i class="fa fa-@Icon fa-stack-1x fa-inverse"></i>
                         </span>
-                    </a>
+                    </button>
                 </div>
             </nav>
         </footer>

@@ -29,40 +29,29 @@
     </NotAuthorized>
 </AuthorizeView>
 
-<h1>Forum</h1>
-<p>This forum page uses SignalR and persists in a database. </p>
+<h1>پیام‌رسان</h1>
 
 <AuthorizeView Context="AuthorizeContext">
     <Authorized>
         <div id="scroller">
-            <MatList SingleSelection="true" TwoLine="true">
-                @if (Messages == null)
+            @if (Messages == null)
+            {
+                <LoadingBackground ShowLogoBox="true"></LoadingBackground>
+            }
+            else if (Messages.Count == 0)
+            {
+                <span>بدون پیام.</span>
+            }
+            else
+            {
                 {
-                    <MatListItem>
-                        <MatListItemText>
-                            Loading messages...
-                        </MatListItemText>
-                    </MatListItem>
+                    Messages.Sort((x, y) => x.When.CompareTo(y.When));
                 }
-                else if (Messages.Count == 0)
+                @foreach (var message in Messages)
                 {
-                    <MatListItem>
-                        <MatListItemText>
-                            No Messages.
-                        </MatListItemText>
-                    </MatListItem>
+                    <ForumMessage Delete="Delete" Message="@message" />
                 }
-                else
-                {
-                    {
-                        Messages.Sort((x, y) => x.When.CompareTo(y.When));
-                    }
-                    @foreach (var message in Messages)
-                    {
-                        <ForumMessage Delete="Delete" Message="@message" />
-                    }
-                }
-            </MatList>
+            }
             <div class="MessageCreateForm"> <ForumMessageCreateForm Send="Send" /></div>
             <div id="anchor"></div>
         </div>
