@@ -20,6 +20,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+
 //using System.Text.Json; //Does not work for this middleware, at least as in preview
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace VinarishCsb.Server.Middleware
     public class APIResponseRequestLoggingMiddleware
     {
         private readonly RequestDelegate _next;
-        ILogger<APIResponseRequestLoggingMiddleware> _logger;
+        private ILogger<APIResponseRequestLoggingMiddleware> _logger;
         private IApiLogService _apiLogService;
         private readonly Func<object, Task> _clearCacheHeadersDelegate;
         private readonly bool _enableAPILogging;
@@ -60,7 +61,7 @@ namespace VinarishCsb.Server.Middleware
                 else
                 {
                     Stopwatch stopWatch = Stopwatch.StartNew();
-                    var requestTime = DateTime.Now;
+                    var requestTime = DateTime.UtcNow;
 
                     var formattedRequest = await FormatRequest(request);
                     var originalBodyStream = httpContext.Response.Body;
@@ -90,6 +91,7 @@ namespace VinarishCsb.Server.Middleware
                             stopWatch.Stop();
 
                             #region Log Request / Response
+
                             //Search the Ignore paths from appsettings to ignore the loggin of certian api paths
                             if (_enableAPILogging && (_ignorePaths.Any(e => !request.Path.StartsWithSegments(new PathString(e.ToLower())))))
                             {
@@ -102,27 +104,28 @@ namespace VinarishCsb.Server.Middleware
                                             ? await userManager.FindByIdAsync(httpContext.User.Claims.Where(c => c.Type == JwtClaimTypes.Subject).First().Value)
                                             : null;
 
-                                await SafeLog(requestTime,
-                                    stopWatch.ElapsedMilliseconds,
-                                    response.StatusCode,
-                                    request.Method,
-                                    request.Path,
-                                    request.QueryString.ToString(),
-                                    formattedRequest,
-                                    responseBodyContent,
-                                    httpContext.Connection.RemoteIpAddress.ToString(),
-                                    user
-                                    );
+                                    await SafeLog(requestTime,
+                                        stopWatch.ElapsedMilliseconds,
+                                        response.StatusCode,
+                                        request.Method,
+                                        request.Path,
+                                        request.QueryString.ToString(),
+                                        formattedRequest,
+                                        responseBodyContent,
+                                        httpContext.Connection.RemoteIpAddress.ToString(),
+                                        user
+                                        );
                                 }
-                                catch (Exception ex) {
+                                catch (Exception ex)
+                                {
                                     _logger.LogWarning("An Inner Middleware exception occurred on SafeLog: " + ex.Message);
                                 }
                             }
-                            #endregion
+
+                            #endregion Log Request / Response
                         }
                         catch (System.Exception ex)
                         {
-
                             _logger.LogWarning("An Inner Middleware exception occurred: " + ex.Message);
                             await HandleExceptionAsync(httpContext, ex);
                         }
@@ -167,7 +170,6 @@ namespace VinarishCsb.Server.Middleware
                 };
                 code = ex.StatusCode;
                 httpContext.Response.StatusCode = code;
-
             }
             else if (exception is UnauthorizedAccessException)
             {
@@ -260,7 +262,7 @@ namespace VinarishCsb.Server.Middleware
                     apiResponse.StatusCode = code;
                 }
 
-                if ( (apiResponse.Result != null) || (!string.IsNullOrEmpty(apiResponse.Message)) )
+                if ((apiResponse.Result != null) || (!string.IsNullOrEmpty(apiResponse.Message)))
                 {
                     jsonString = JsonConvert.SerializeObject(apiResponse);
                 }
@@ -314,12 +316,14 @@ namespace VinarishCsb.Server.Middleware
 
         private string ConvertToJSONString(int code, object content)
         {
-            return JsonConvert.SerializeObject(new ApiResponse(code, ResponseMessageEnum.Success.GetDescription(), content,  null, "0.4.0"), JSONSettings());
+            return JsonConvert.SerializeObject(new ApiResponse(code, ResponseMessageEnum.Success.GetDescription(), content, null, "0.4.0"), JSONSettings());
         }
+
         private string ConvertToJSONString(ApiResponse apiResponse)
         {
             return JsonConvert.SerializeObject(apiResponse, JSONSettings());
         }
+
         private string ConvertToJSONString(object rawJSON)
         {
             return JsonConvert.SerializeObject(rawJSON, JSONSettings());
@@ -338,6 +342,7 @@ namespace VinarishCsb.Server.Middleware
                 Converters = new List<JsonConverter> { new StringEnumConverter() }
             };
         }
+
         private async Task SafeLog(DateTime requestTime,
                             long responseMillis,
                             int statusCode,
@@ -351,7 +356,7 @@ namespace VinarishCsb.Server.Middleware
         {
             // Do not log these events login, logout, getuserinfo...
             if ((path.ToLower().StartsWith("/api/account/")) ||
-                (path.ToLower().StartsWith("/api/UserProfile/")) )
+                (path.ToLower().StartsWith("/api/UserProfile/")))
             {
                 return;
             }
@@ -408,6 +413,5 @@ namespace VinarishCsb.Server.Middleware
 
             return Task.CompletedTask;
         }
-
     }
 }

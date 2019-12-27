@@ -1,15 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 
-@if (messageDto.Incoming)
+@if (message.Incoming)
 {
     <div class="msg">
         <div class="received_msg">
-            <span class="time_date" style="text-align: left;">@messageDto.UserName</span>
+            <span class="time_date" style="text-align: left;">@message.UserName</span>
             <p>
-                @messageDto.Text
+                @message.Text
             </p>
             <span class="time_date">
-                @pc.GetHour(MessageDate):@pc.GetMinute(MessageDate)    |   @pc.GetDayOfMonth(MessageDate)/@pc.GetMonth(MessageDate)/@pc.GetYear(MessageDate)
+                @ConvertToFormattedPersianCalendar(message.When.ToLocalTime())
             </span>
         </div>
     </div>
@@ -19,10 +19,10 @@ else
     <div class="msg">
         <div class="outgoing_msg">
             <p>
-                @messageDto.Text
+                @message.Text
             </p>
             <span class="time_date">
-                @pc.GetHour(MessageDate):@pc.GetMinute(MessageDate)    |   @pc.GetDayOfMonth(MessageDate)/@pc.GetMonth(MessageDate)/@pc.GetYear(MessageDate)
+                @ConvertToFormattedPersianCalendar(message.When.ToLocalTime())
             </span>
         </div>
     </div>
@@ -48,23 +48,14 @@ else
 
 @code
 {
-    MessageDto messageDto { get; set; }
-    DateTime MessageDate;
     [Parameter]
     public Func<MessageDto, Task> Delete { get; set; }
 
     [Parameter]
     public MessageDto message { get; set; }
 
-    protected override void OnParametersSet()
-    {
-        messageDto = message;
-        MessageDate = messageDto.When.ToLocalTime();
-    }
-    PersianCalendar pc = new PersianCalendar();
-
     async Task DeleteMessage()
     {
-        await Delete(messageDto);
+        await Delete(message);
     }
 }

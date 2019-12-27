@@ -2,7 +2,8 @@
 @attribute [Authorize]
 @inject HttpClient Http
 @inject IMatToaster matToaster
-
+@inject IJSRuntime JSRuntime
+@implements IDisposable
 @if (apiLogItems == null)
 {
     <LoadingBackground ShowLogoBox="true">
@@ -12,33 +13,56 @@ else
 {
     <h1>گزارش سامانه</h1>
     <p>
-        در این بخش گزارش داد و ستدهای  کاربران با سامانه نمایش داده شده است.
+        در این بخش گزارش دادوستدهای  کاربران با سامانه نمایش داده شده است.
     </p>
-    <MatTable Items="@apiLogItems" Class="mat-elevation-z5" Striped="true" PageSize="10">
-        <MatTableHeader>
-            <th><div style="width:175px;">Date / Time</div></th>
-            <th><div style="width:175px;">UserId</div></th>
-            <th>Path</th>
-            <th>Method</th>
-            <th>Content</th>
-        </MatTableHeader>
-        <MatTableRow>
-            <td>@context.RequestTime</td>
-            <td>@context.UserName</td>
-            <td>@context.Path</td>
-            <td>@context.Method</td>
-            <td>
-                @if (context.Method != "GET")
-                    {
-                    <span> @context.ResponseBody</span>
-                    }
-                /**/
-                /**/
-                /**/
-                /**/
-            </td>
-        </MatTableRow>
-    </MatTable>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>زمان</th>
+                <th>کاربر</th>
+                <th>بخش</th>
+                <th>دستور</th>
+                <th>درون‌مایه</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var context in apiLogItems)
+            {
+                {
+                    if (context.Method.ToUpper() == "GET") continue;
+                }
+                <tr>
+                    <td><i class="fa fa-clock-o fa-fw"></i>@ConvertToFormattedPersianCalendar(context.RequestTime.ToLocalTime())</td>
+                    <td><i class="fa fa-user fa-fw"></i>@context.UserName</td>
+                    <td><i class="fa fa-tree fa-fw"></i>@context.Path</td>
+                    <td><i class="fa fa-pagelines fa-fw"></i>@context.Method</td>
+                    <td>
+                        @if (context.Method.ToUpper() == "PUT")
+                        {
+                            <span class="text-primary">
+                                <i class="fa fa-pencil fa-fw"></i>
+                                @context.ResponseBody
+                            </span>
+                        }
+                        @if (context.Method.ToUpper() == "POST")
+                        {
+                            <span class="text-success">
+                                <i class="fa fa-plus fa-fw"></i>
+                                @context.ResponseBody
+                            </span>
+                        }
+                        @if (context.Method.ToUpper() == "DELETE")
+                        {
+                            <span class="text-danger">
+                                <i class="fa fa-trash fa-fw"></i>
+                                @context.ResponseBody
+                            </span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 @code {
@@ -58,4 +82,13 @@ else
             matToaster.Add(apiResponse.Message, MatToastType.Danger, "Api Log Items Retrieval Failed");
         }
     }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("MakeDataTable");
+    }
+    public void Dispose()
+    {
+        JSRuntime.InvokeVoidAsync("DestroyDataTable");
+    }
+
 }
