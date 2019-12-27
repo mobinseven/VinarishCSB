@@ -228,8 +228,21 @@ namespace VinarishCsb.Server
                 }
             });
 
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.ConfigureExternalCookie(options =>
+            {
+                // macOS login fix
+                options.Cookie.SameSite = SameSiteMode.None;
+            });
+
             services.ConfigureApplicationCookie(options =>
             {
+                // macOS login fix
+                options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.HttpOnly = false;
 
                 // Suppress redirect on API URLs in ASP.NET Core -> https://stackoverflow.com/a/56384729/54159
@@ -327,16 +340,17 @@ namespace VinarishCsb.Server
             //    //    app.UseHsts(); //HSTS Middleware (UseHsts) to send HTTP Strict Transport Security Protocol (HSTS) headers to clients.
             //}
 
+            app.UseHttpsRedirection();
             //app.UseStaticFiles();
+            app.UseCookiePolicy();
             app.UseClientSideBlazorFiles<Client.Startup>();
 
-            app.UseHttpsRedirection();
             app.UseRouting();
-            //app.UseAuthentication();
+            //app.UseAuthentication(); //Removed for IS4
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            //must be AFTER the Auth middleware to get the User/Identity info
+            //Must be AFTER the Auth middleware to get the User/Identity info
             app.UseMiddleware<UserSessionMiddleware>();
 
             // NSwag

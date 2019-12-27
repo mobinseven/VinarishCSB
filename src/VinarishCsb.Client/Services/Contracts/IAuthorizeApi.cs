@@ -24,5 +24,6 @@ namespace VinarishCsb.Client.Services.Contracts
         Task<UserInfoDto> GetUser();
 
         Task<ApiResponseDto> UpdateUser(UserInfoDto userInfo);
+        Task<UserInfoDto> GetUser();
     }
 }

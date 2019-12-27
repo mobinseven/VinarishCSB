@@ -1,16 +1,25 @@
 ﻿@using Microsoft.AspNetCore.Components
 @inject IdentityAuthenticationStateProvider authStateProvider
 
-<AuthorizeView Context="AuthorizeContext">
+<AuthorizeView>
     <Authorized>
-        <MatButton Icon="account_circle" Link="/account/profile" Label="@userInfo.UserName" Raised="true"></MatButton>
+        <div class="drawer-profile">
+            <MatIconButton Icon="account_circle" Link="/account/profile"></MatIconButton>
+            @if (userInfo == null)
+            {
+                <div class="spinner-border spinner-border-sm" role="status"></div>
+            }
+            else
+            {
+                <span class="miniHover"><b><a href="/account/profile">@userInfo.UserName</a></b></span>
+            }
+        </div>
     </Authorized>
 </AuthorizeView>
 
 @code {
     public bool IsLoggedIn = false;
     UserInfoDto userInfo = null;
-
     [CascadingParameter]
     Task<AuthenticationState> authenticationStateTask { get; set; }
 
