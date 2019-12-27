@@ -22,7 +22,7 @@ else
                 <th>کاربر</th>
                 <th>بخش</th>
                 <th>دستور</th>
-                <th>درون‌مایه</th>
+                @*<th>درون‌مایه</th>*@
             </tr>
         </thead>
         <tbody>
@@ -32,10 +32,13 @@ else
                     if (context.Method.ToUpper() == "GET") continue;
                 }
                 <tr>
-                    <td><i class="fa fa-clock-o fa-fw"></i>@ConvertToFormattedPersianCalendar(context.RequestTime.ToLocalTime())</td>
+                    <td class="datetime" data-order="@UnixTimestampSeconds(context.RequestTime)">
+                    </td>
                     <td><i class="fa fa-user fa-fw"></i>@context.UserName</td>
-                    <td><i class="fa fa-tree fa-fw"></i>@context.Path</td>
-                    <td><i class="fa fa-pagelines fa-fw"></i>@context.Method</td>
+                    <td>
+                        <i class="fa fa-tree fa-fw"></i>@context.Path.Split('/')[2]
+                    </td>
+                    @*<td><i class="fa fa-pagelines fa-fw"></i>@context.Method</td>*@
                     <td>
                         @if (context.Method.ToUpper() == "PUT")
                         {
@@ -84,7 +87,12 @@ else
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JSRuntime.InvokeVoidAsync("MakeDataTable");
+        if (!firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("MakeDataTable");
+            await JSRuntime.InvokeVoidAsync("ConvertAllTimeCells");
+
+        }
     }
     public void Dispose()
     {

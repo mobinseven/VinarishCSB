@@ -1,4 +1,22 @@
 ﻿var table = null;
+moment.loadPersian();
+//console.log(moment('2016-03-12 13:00:00').fromNow())
+window.ConvertAllTimeCells = function () {
+    var cells = [];
+    cells = document.getElementsByClassName('datetime');
+    for (var i = 0; i < cells.length; i++) {
+        var item = cells.item(i);
+        item.innerHTML = moment(item.dataset.order, "X").format('dddd jD jMMMM  jYY | HH:mm');
+    }
+}
+window.ConvertAllTimeCellsFromNow = function () {
+    var cells = [];
+    cells = document.getElementsByClassName('datetime');
+    for (var i = 0; i < cells.length; i++) {
+        var item = cells.item(i);
+        item.innerHTML = moment(item.dataset.order, "X").fromNow();
+    }
+}
 window.MakeDataTable = function () {
     table = $('.table').DataTable({
         paging: false,
