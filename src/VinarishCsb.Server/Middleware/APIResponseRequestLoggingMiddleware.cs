@@ -23,6 +23,9 @@ using System.Text.RegularExpressions;
 
 //using System.Text.Json; //Does not work for this middleware, at least as in preview
 using System.Threading.Tasks;
+using System.Net.Http;
+using VinarishCsb.Shared.Dto;
+using Newtonsoft.Json.Linq;
 
 namespace VinarishCsb.Server.Middleware
 {
@@ -355,16 +358,20 @@ namespace VinarishCsb.Server.Middleware
                             ApplicationUser user)
         {
             // Do not log these events login, logout, getuserinfo...
+            // Do not log GET events
             if ((path.ToLower().StartsWith("/api/account/")) ||
-                (path.ToLower().StartsWith("/api/UserProfile/")))
+                (path.ToLower().StartsWith("/api/UserProfile/"))
+                //              || method.ToLower() == "get"
+                )
             {
                 return;
             }
 
-            if (requestBody.Length > 256)
-            {
-                requestBody = $"(Truncated to 200 chars) {requestBody.Substring(0, 200)}";
-            }
+            //Uncomment if truncation is needed
+            //if (requestBody.Length > 256)
+            //{
+            //    requestBody = $"(Truncated to 200 chars) {requestBody.Substring(0, 200)}";
+            //}
 
             // If the response body was an ApiResponse we should just save the Result object
             if (responseBody.Contains("\"result\":"))
@@ -377,16 +384,27 @@ namespace VinarishCsb.Server.Middleware
                 catch { }
             }
 
-            if (responseBody.Length > 256)
-            {
-                responseBody = $"(Truncated to 200 chars) {responseBody.Substring(0, 200)}";
-            }
+            //Uncomment if truncation is needed
+            //if (responseBody.Length > 256)
+            //{
+            //    responseBody = $"(Truncated to 200 chars) {responseBody.Substring(0, 200)}";
+            //}
 
             if (queryString.Length > 256)
             {
                 queryString = $"(Truncated to 200 chars) {queryString.Substring(0, 200)}";
             }
 
+            if (method.ToUpper() == "PUT")
+            {
+                JObject item = JObject.Parse(requestBody.Substring(requestBody.IndexOf('{')));
+                var resp = await _apiLogService.GetLastGet(path + "/" + item["id"].Value<string>(), user.Id);
+                if (resp != null && resp.StatusCode == 200)
+                {
+                    //ApiLogItem oldItem = JsonConvert.DeserializeObject<ApiLogItem>(resp.Result.ToString());
+                    responseBody = "[" + responseBody + "," + resp.ResponseBody + "]";
+                }
+            }
             await _apiLogService.Log(new ApiLogItem
             {
                 RequestTime = requestTime,

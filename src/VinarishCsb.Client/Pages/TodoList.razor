@@ -103,6 +103,8 @@ else
         {
 
             todo.IsCompleted = !todo.IsCompleted;
+            ApiResponseDto apiResponseGet = await Http.GetJsonAsync<ApiResponseDto>("api/todo/" + todo.Id);
+
             ApiResponseDto apiResponse = await Http.PutJsonAsync<ApiResponseDto>("api/todo", todo);
 
             if (!apiResponse.IsError)

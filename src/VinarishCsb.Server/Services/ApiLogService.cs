@@ -17,8 +17,12 @@ namespace VinarishCsb.Server.Services
     public interface IApiLogService
     {
         Task Log(ApiLogItem apiLogItem);
+
         Task<ApiResponse> Get();
+
         Task<ApiResponse> GetByApplictionUserId(Guid applicationUserId);
+
+        Task<ApiLogItem> GetLastGet(string path, Guid userId);
     }
 
     public class ApiLogService : IApiLogService
@@ -41,7 +45,7 @@ namespace VinarishCsb.Server.Services
             // Calling Log from the API Middlware results in a disposed ApplicationDBContext. This is here to build a DB Context for logging API Calls
             // If you have a better solution please let me know.
             _optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            
+
             if (Convert.ToBoolean(configuration["VinarishCsb:UsePostgresServer"] ?? "false"))
             {
                 _optionsBuilder.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
@@ -108,6 +112,18 @@ namespace VinarishCsb.Server.Services
             {
                 return new ApiResponse(400, ex.Message);
             }
+        }
+
+        public async Task<ApiLogItem> GetLastGet(string path, Guid userId)
+        {
+            var item = await _db.ApiLogs
+                .OrderByDescending(p => p.RequestTime)
+                .FirstAsync(log => log.Path == path && log.ApplicationUserId == userId);
+            return item;
+            //if (item != null)
+            //    return new ApiResponse(200, "Retrieved Old Value", item);
+            //else
+            //    return new ApiResponse(400, "Old Value was no requested");
         }
     }
 }
