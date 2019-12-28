@@ -20,8 +20,27 @@ window.ConvertAllTimeCellsFromNow = function () {
 window.MakeDataTable = function () {
     table = $('.table').DataTable({
         paging: false,
-        fixedHeader: true,
-        responsive: true,
+        responsive: {
+            details: {
+                type: 'column',
+                target: 'tr',
+                renderer: function (api, rowIdx, columns) {
+                    var data = $.map(columns, function (col, i) {
+                        return col.hidden ?
+                            '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                            '<td>' + col.data + '</td>' +
+                            '</tr>' :
+                            '';
+                    }).join('');
+
+                    return data ?
+                        $('<table/>')
+                            .attr('style', 'width:100%')
+                            .append(data) :
+                        false;
+                }
+            }
+        },
         language: {
             "decimal": "",
             "emptyTable": "بدون رده",
@@ -43,6 +62,7 @@ window.MakeDataTable = function () {
             }
         }
     });
+    new $.fn.dataTable.FixedHeader(table);
 }
 window.DestroyDataTable = function () {
     table.destroy();

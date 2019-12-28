@@ -4,6 +4,11 @@
 @inject IMatToaster matToaster
 @inject IJSRuntime JSRuntime
 @implements IDisposable
+<style>
+    body {
+        table-layout: fixed;
+    }
+</style>
 @if (apiLogItems == null)
 {
     <LoadingBackground ShowLogoBox="true">
@@ -12,60 +17,91 @@
 else
 {
     <h1>گزارش سامانه</h1>
-    <p>
-        در این بخش گزارش دادوستدهای  کاربران با سامانه نمایش داده شده است.
-    </p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>زمان</th>
-                <th>کاربر</th>
-                <th>بخش</th>
-                <th>دستور</th>
-                @*<th>درون‌مایه</th>*@
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var context in apiLogItems)
-            {
-                {
-                    if (context.Method.ToUpper() == "GET") continue;
-                }
-                <tr>
-                    <td class="datetime" data-order="@UnixTimestampSeconds(context.RequestTime)">
-                    </td>
-                    <td><i class="fa fa-user fa-fw"></i>@context.UserName</td>
-                    <td>
-                        <i class="fa fa-tree fa-fw"></i>@context.Path.Split('/')[2]
-                    </td>
-                    @*<td><i class="fa fa-pagelines fa-fw"></i>@context.Method</td>*@
-                    <td>
-                        @if (context.Method.ToUpper() == "PUT")
-                        {
-                            <span class="text-primary">
-                                <i class="fa fa-pencil fa-fw"></i>
-                                @context.ResponseBody
-                            </span>
-                        }
-                        @if (context.Method.ToUpper() == "POST")
-                        {
-                            <span class="text-success">
-                                <i class="fa fa-plus fa-fw"></i>
-                                @context.ResponseBody
-                            </span>
-                        }
-                        @if (context.Method.ToUpper() == "DELETE")
-                        {
-                            <span class="text-danger">
-                                <i class="fa fa-trash fa-fw"></i>
-                                @context.ResponseBody
-                            </span>
-                        }
-                    </td>
+    @*<p>
+            در این بخش گزارش دادوستدهای  کاربران با سامانه نمایش داده شده است.
+        </p>*@
+    <div class="table-responsive">
+        <table class="table compact table-sm table-bordered nowrap" style="cursor:pointer !important;font-size:medium">
+            <thead>
+                <tr class="bg-dark text-white">
+                    <th><i class="fa fa-clock-o fa-fw"></i></th>
+                    <th><i class="fa fa-user fa-fw"></i></th>
+                    <th><i class="fa fa-building fa-fw"></i></th>
+                    <th class="none"></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var context in apiLogItems)
+                {
+                    string method = context.Method.ToUpper();
+                    if (method == "GET") continue;
+                    string color = "dark";
+                    string icon = "tint";
+                    switch (method)
+                    {
+                        case "PUT": color = "primary"; icon = "pencil"; break;
+                        case "POST": color = "success"; icon = "plus"; break;
+                        case "DELETE": color = "danger"; icon = "trash"; break;
+                    }
+
+                    <tr class="table-@color">
+                        <td class="datetime" data-order="@UnixTimestampSeconds(context.RequestTime)">
+                        </td>
+                        <td>@context.UserName</td>
+                        <td>@context.Path.Split('/')[2]</td>
+                        <td>
+                            <span class="text-@color">
+                                <i class="fa fa-@icon fa-fw"></i>
+                            </span>
+                            @if (method == "DELETE" || method == "POST")
+                            {
+                                JObject obj = JsonConvert.DeserializeObject<JObject>(context.ResponseBody);
+
+                                <table class="table-@color" style="width:100%">
+                                    @{ var props = obj.Properties().ToArray();
+                                    }
+
+                                    @for (int p = 1; p < props.Count(); p++)
+                                    {
+                                        <tr>
+                                            <td style="white-space: nowrap">@props[p].Name</td>
+                                            <td style="width:99%">@props[p].Value</td>
+                                        </tr>
+                                    }
+                                </table>
+
+                            }
+                            @if (method == "PUT")
+                            {
+                                JArray obj = JsonConvert.DeserializeObject<JArray>(context.ResponseBody);
+                                var NewProps = obj[0].ToObject<JObject>().Properties().ToArray();
+                                var OldProps = obj[1].ToObject<JObject>().Properties().ToArray();
+                                <div class="table-responsive">
+                                    <table>
+                                        @for (int p = 1; p < NewProps.Count(); p++)
+                                        {
+                                            <tr>
+                                                <td><strong>@NewProps[p].Name&nbsp;</strong></td>
+                                                <td>
+                                                    @if (OldProps[p].Value.ToString() != NewProps[p].Value.ToString())
+                                                    {
+                                                        <span class="text-danger" style="text-decoration:line-through">
+                                                            @OldProps[p].Value
+                                                        </span>
+                                                    }
+                                                    <span>&nbsp;@NewProps[p].Value</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
 @code {
@@ -77,8 +113,7 @@ else
 
         if (apiResponse.StatusCode == 200)
         {
-            apiLogItems = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiLogItemDto[]>(apiResponse.Result.ToString()).ToList<ApiLogItemDto>();
-            apiLogItems.Sort((x, y) => -x.RequestTime.CompareTo(y.RequestTime));
+            apiLogItems = JsonConvert.DeserializeObject<ApiLogItemDto[]>(apiResponse.Result.ToString()).ToList<ApiLogItemDto>();
         }
         else
         {
