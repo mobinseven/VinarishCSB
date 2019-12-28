@@ -81,8 +81,8 @@ else
                                         @for (int p = 1; p < NewProps.Count(); p++)
                                         {
                                             <tr>
-                                                <td><strong>@NewProps[p].Name&nbsp;</strong></td>
-                                                <td>
+                                                <td style="white-space: nowrap"><strong>@NewProps[p].Name&nbsp;</strong></td>
+                                                <td style="width:99%">
                                                     @if (OldProps[p].Value.ToString() != NewProps[p].Value.ToString())
                                                     {
                                                         <span class="text-danger" style="text-decoration:line-through">

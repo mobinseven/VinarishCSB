@@ -358,10 +358,10 @@ namespace VinarishCsb.Server.Middleware
                             ApplicationUser user)
         {
             // Do not log these events login, logout, getuserinfo...
-            // Do not log GET events
+
             if ((path.ToLower().StartsWith("/api/account/")) ||
                 (path.ToLower().StartsWith("/api/UserProfile/"))
-                //              || method.ToLower() == "get"
+                              || (method.ToLower() == "get" && path.Count(c => c == '/') == 2)// Do not log 'GET all' events like: /api/todo
                 )
             {
                 return;
