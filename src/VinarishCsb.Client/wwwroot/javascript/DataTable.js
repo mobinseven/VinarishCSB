@@ -1,6 +1,5 @@
 ﻿var table = null;
 moment.loadPersian();
-//console.log(moment('2016-03-12 13:00:00').fromNow())
 window.ConvertAllTimeCells = function () {
     var cells = [];
     cells = document.getElementsByClassName('datetime');
@@ -18,7 +17,12 @@ window.ConvertAllTimeCellsFromNow = function () {
     }
 }
 window.MakeDataTable = function () {
+    $('.' + scrollerClassName).bind('scroll', function (e) { //scrollerClassName: Defined in ScrollPosition.js
+        table.fixedHeader.adjust();
+    });
+
     table = $('.table').DataTable({
+        fixedHeader: true,
         paging: false,
         responsive: {
             details: {
@@ -42,6 +46,7 @@ window.MakeDataTable = function () {
             }
         },
         language: {
+            searchPlaceholder: String.fromCharCode(0xf002),
             "decimal": "",
             "emptyTable": "بدون رده",
             "info": "_START_ تا _END_ از _TOTAL_ رده",
@@ -52,7 +57,7 @@ window.MakeDataTable = function () {
             "lengthMenu": "نمایش _MENU_",
             "loadingRecords": "دریافت داده‌ها ...",
             "processing": "پردازش داده‌ها ...",
-            "search": "جستجو:",
+            "search": "",
             "zeroRecords": "چیزی یافت نشد",
             "paginate": {
                 "first": "نخستین",
@@ -62,7 +67,6 @@ window.MakeDataTable = function () {
             }
         }
     });
-    new $.fn.dataTable.FixedHeader(table);
 }
 window.DestroyDataTable = function () {
     table.destroy();

@@ -68,11 +68,11 @@ namespace VinarishCsb.Server
                 }
                 else if (Convert.ToBoolean(Configuration["VinarishCsb:UsePostgresServer"] ?? "false"))
                 {
-                    builder.UseNpgsql(Configuration.GetConnectionString("PostgresConnection"), sql => sql.MigrationsAssembly(migrationsAssembly));
+                    //builder.UseNpgsql(Configuration.GetConnectionString("PostgresConnection"), sql => sql.MigrationsAssembly(migrationsAssembly));
                 }
                 else
                 {
-                    builder.UseSqlite(dbConnString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    //builder.UseSqlite(dbConnString, sql => sql.MigrationsAssembly(migrationsAssembly));
                 }
             }
 
@@ -269,15 +269,15 @@ namespace VinarishCsb.Server
                 .PartManager.ApplicationParts.Add(new AssemblyPart(assembly));
             services.AddSignalR();
 
-            services.AddSwaggerDocument(config =>
-            {
-                config.PostProcess = document =>
-                {
-                    document.Info.Version = "v0.2.3";
-                    document.Info.Title = "Blazor Boilerplate";
-                    document.Info.Description = "Blazor Boilerplate / Starter Template using the  (ASP.NET Core Hosted) (dotnet new blazorhosted) model. Hosted by an ASP.NET Core server";
-                };
-            });
+            //services.AddSwaggerDocument(config =>
+            //{
+            //    config.PostProcess = document =>
+            //    {
+            //        document.Info.Version = "v0.2.3";
+            //        document.Info.Title = "Blazor Boilerplate";
+            //        document.Info.Description = "Blazor Boilerplate / Starter Template using the  (ASP.NET Core Hosted) (dotnet new blazorhosted) model. Hosted by an ASP.NET Core server";
+            //    };
+            //});
 
             services.AddResponseCompression(opts =>
             {

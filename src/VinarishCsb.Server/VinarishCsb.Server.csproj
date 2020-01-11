@@ -8,14 +8,14 @@
     </RestoreAdditionalProjectSources>
     <LangVersion>8.0</LangVersion>
     <Version>0.5.0</Version>
-    <Authors>Keith Fimreite</Authors>
-    <Company>EnkodeLLC</Company>
+    <Authors>mobinseven</Authors>
+    <Company>VORN Ltd.</Company>
     <Title>Blazor Boilerplate Server</Title>
-    <Description>Blazor Boilerplate is starter kit / SPA Admin Template for Blazor</Description>
+    <Description></Description>
     <WebPage>https://VinarishCsb.com/</WebPage>
-    <PackageProjectUrl>https://VinarishCsb.com/</PackageProjectUrl>
+    <PackageProjectUrl>https://Vinarish.com/</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/enkodellc/VinarishCsb</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mobinseven/VinarishCsb</RepositoryUrl>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
     <DockerfileFile>../Dockerfile</DockerfileFile>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -39,17 +39,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.2.0" />
     <PackageReference Include="Serilog" Version="2.9.1-dev-01154" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.1-dev-00216" />

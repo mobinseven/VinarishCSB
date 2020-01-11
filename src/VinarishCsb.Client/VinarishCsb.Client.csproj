@@ -19,6 +19,8 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/enkodellc/VinarishCsb</RepositoryUrl>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="4.1.1" />

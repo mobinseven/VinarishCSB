@@ -48,7 +48,7 @@ namespace VinarishCsb.Server.Services
 
             if (Convert.ToBoolean(configuration["VinarishCsb:UsePostgresServer"] ?? "false"))
             {
-                _optionsBuilder.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
+                //_optionsBuilder.UseNpgsql(configuration.GetConnectionString("PostgresConnection"));
             }
             else if (Convert.ToBoolean(configuration["VinarishCsb:UseSqlServer"] ?? "false"))
             {
@@ -56,7 +56,7 @@ namespace VinarishCsb.Server.Services
             }
             else
             {
-                _optionsBuilder.UseSqlite($"Filename={configuration.GetConnectionString("SqlLiteConnectionFileName")}");  // Sql Lite / file database
+                //_optionsBuilder.UseSqlite($"Filename={configuration.GetConnectionString("SqlLiteConnectionFileName")}");  // Sql Lite / file database
             }
         }
 
