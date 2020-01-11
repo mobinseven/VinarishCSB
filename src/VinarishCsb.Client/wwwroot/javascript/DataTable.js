@@ -17,11 +17,12 @@ window.ConvertAllTimeCellsFromNow = function () {
     }
 }
 window.MakeDataTable = function () {
-    $('.' + scrollerClassName).bind('scroll', function (e) { //scrollerClassName: Defined in ScrollPosition.js
+    $('.' + scrollerClassName).bind('scroll', function (e) { //TODO: scrollerClassName: Defined in ScrollPosition.js
         table.fixedHeader.adjust();
     });
 
     table = $('.table').DataTable({
+        autoWidth: false,
         fixedHeader: true,
         paging: false,
         responsive: {
@@ -31,15 +32,14 @@ window.MakeDataTable = function () {
                 renderer: function (api, rowIdx, columns) {
                     var data = $.map(columns, function (col, i) {
                         return col.hidden ?
-                            '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
-                            '<td>' + col.data + '</td>' +
-                            '</tr>' :
+                            '<div data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                            col.data +
+                            '</div>' :
                             '';
                     }).join('');
-
                     return data ?
-                        $('<table/>')
-                            .attr('style', 'width:100%')
+                        $('<div/>')
+                            //.attr('style', 'width:50%')
                             .append(data) :
                         false;
                 }
@@ -66,6 +66,54 @@ window.MakeDataTable = function () {
                 "previous": "پیشین"
             }
         }
+    });
+
+    $(".DatePicker.from").persianDatepicker({
+        autoClose: true,
+        initialValueType: 'persian',
+        format: 'YY/MM/DD',
+        onSelect: function (unix) {
+            table.minDateFilter = unix / 1000;
+            table.draw();
+        }
+    });
+    $(".DatePicker.to").persianDatepicker({
+        autoClose: true,
+        initialValueType: 'persian',
+        format: 'YY/MM/DD',
+        onSelect: function (unix) {
+            table.maxDateFilter = unix / 1000;
+            table.draw();
+        }
+    });
+    $(".DatePickerClear.from").click(function () {
+        $(".DatePicker.from").val("");
+        table.minDateFilter = undefined;
+        table.draw();
+    });
+    $(".DatePickerClear.to").click(function () {
+        $(".DatePicker.to").val("");
+        table.maxDateFilter = undefined;
+        table.draw();
+    });
+    $.fn.dataTableExt.afnFiltering.push(function (oSettings, aData, iDataIndex) {
+        var Date = aData[0];//TODO: Date must be the first column ALWAYS, in which we have data-search="1456950600000"
+        //if (typeof aData._date == 'undefined') {
+        //    aData._date = new Date(aData[0]).getTime();
+        //}
+        if (typeof table.minDateFilter != "undefined") {
+            if (Date < table.minDateFilter) {
+                return false;
+            }
+        }
+
+        if (typeof table.maxDateFilter != "undefined") {
+            if (Date > table.maxDateFilter) {
+                return false;
+            }
+        }
+
+        return true;
     });
 }
 window.DestroyDataTable = function () {

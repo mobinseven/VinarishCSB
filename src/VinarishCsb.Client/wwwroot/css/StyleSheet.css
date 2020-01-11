@@ -3,7 +3,17 @@
     direction: rtl;
     font-size: larger;
     text-align: justify;
+    table-layout: fixed;
 }
+
+td, th {
+    width: auto;
+}
+
+    td.min, th.min {
+        width: 1%;
+        white-space: nowrap;
+    }
 
 .form-signin {
     width: 100%;

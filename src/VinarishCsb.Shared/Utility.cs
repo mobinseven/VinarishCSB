@@ -24,6 +24,11 @@ namespace VinarishCsb.Shared
         public static readonly DateTime UnixEpoch =
     new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+        public static long UnixTimestampMilliseconds(DateTime dt)
+        {
+            return (long)(dt - UnixEpoch).TotalMilliseconds;
+        }
+
         public static long UnixTimestampSeconds(DateTime dt)
         {
             return (long)(dt - UnixEpoch).TotalSeconds;
